@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Netflix Clone</title>
+    <style>
+        /* Reset y estilos generales */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+        
+        body {
+            background-color: #141414;
+            color: white;
+        }
+        
+        /* Navbar */
+        .navbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 20px 60px;
+            background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.7) 10%, rgba(0, 0, 0, 0));
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            transition: background-color 0.3s;
+        }
+        
+        .navbar.scrolled {
+            background-color: #141414;
+        }
+        
+        .navbar-left {
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo {
+            width: 120px;
+            margin-right: 30px;
+        }
+        
+        .nav-links {
+            display: flex;
+            list-style: none;
+        }
+        
+        .nav-links li {
+            margin-right: 20px;
+        }
+        
+        .nav-links a {
+            color: #e5e5e5;
+            text-decoration: none;
+            font-size: 14px;
+            transition: color 0.3s;
+        }
+        
+        .nav-links a:hover {
+            color: #b3b3b3;
+        }
+        
+        .navbar-right {
+            display: flex;
+            align-items: center;
+        }
+        
+        .search-icon, .bell-icon, .profile {
+            margin-left: 25px;
+            cursor: pointer;
+        }
+        
+        /* Hero section */
+        .hero {
+            height: 80vh;
+            display: flex;
+            position: relative;
+            padding: 60px;
+            align-items: center;
+            background: linear-gradient(to right, rgba(0, 0, 0, 0.8) 30%, rgba(0, 0, 0, 0)), 
+                        url('img/hero/stranger-things.jpg') center/cover no-repeat;
+        }
+        
+        .hero-content {
+            max-width: 500px;
+        }
+        
+        .hero-title {
+            font-size: 3rem;
+            margin-bottom: 20px;
+        }
+        
+        .hero-description {
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+            color: #e5e5e5;
+        }
+        
+        .hero-buttons {
+            display: flex;
+        }
+        
+        .play-btn, .more-info-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 10px 20px;
+            border-radius: 4px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            margin-right: 10px;
+            border: none;
+        }
+        
+        .play-btn {
+            background-color: white;
+            color: black;
+        }
+        
+        .more-info-btn {
+            background-color: rgba(109, 109, 110, 0.7);
+            color: white;
+        }
+        
+        /* Sliders */
+        .slider-section {
+            padding: 20px 60px;
+            margin-top: 20px;
+        }
+        
+        .slider-title {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+        }
+        
+        .slider {
+            display: flex;
+            overflow-x: scroll;
+            scrollbar-width: none; /* Firefox */
+            padding: 20px 0;
+        }
+        
+        .slider::-webkit-scrollbar {
+            display: none; /* Chrome, Safari, Edge */
+        }
+        
+        .slider-item {
+            min-width: 250px;
+            height: 140px;
+            margin-right: 10px;
+            border-radius: 4px;
+            overflow: hidden;
+            position: relative;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+        
+        .slider-item:hover {
+            transform: scale(1.05);
+        }
+        
+        .slider-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .slider-item .title-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 10px;
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0));
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        
+        .slider-item:hover .title-overlay {
+            opacity: 1;
+        }
+        
+        /* Footer */
+        .footer {
+            padding: 50px 60px;
+            color: #757575;
+        }
+        
+        .footer-links {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .footer-links a {
+            color: #757575;
+            text-decoration: none;
+            font-size: 13px;
+            margin-bottom: 16px;
+            display: block;
+        }
+        
+        .footer-links a:hover {
+            text-decoration: underline;
+        }
+        
+        .footer-text {
+            font-size: 13px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="navbar-left">
+            <img src="img/logo/netflix-logo.svg" alt="Netflix" class="logo">
+            <ul class="nav-links">
+                <li><a href="#" class="active">Inicio</a></li>
+                <li><a href="#">Series</a></li>
+                <li><a href="#">Películas</a></li>
+                <li><a href="#">Novedades populares</a></li>
+                <li><a href="#">Mi lista</a></li>
+                <li><a href="#">Explorar por idiomas</a></li>
+            </ul>
+        </div>
+        <div class="navbar-right">
+            <div class="search-icon">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <path d="M11 19C15.4183 19 19 15.4183 19 11C19 6.58172 15.4183 3 11 3C6.58172 3 3 6.58172 3 11C3 15.4183 6.58172 19 11 19Z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M21 21L16.65 16.65" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </div>
+            <div class="bell-icon">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <path d="M18 8C18 6.4087 17.3679 4.88258 16.2426 3.75736C15.1174 2.63214 13.5913 2 12 2C10.4087 2 8.88258 2.63214 7.75736 3.75736C6.63214 4.88258 6 6.4087 6 8C6 15 3 17 3 17H21C21 17 18 15 18 8Z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M13.73 21C13.5542 21.3031 13.3019 21.5547 12.9982 21.7295C12.6946 21.9044 12.3504 21.9965 12 21.9965C11.6496 21.9965 11.3054 21.9044 11.0018 21.7295C10.6982 21.5547 10.4458 21.3031 10.27 21" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </div>
+            <div class="profile">
+                <img src="img/profile/profile-avatar.png" alt="Profile" width="32" height="32" style="border-radius: 4px;">
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero section -->
+    <div class="hero">
+        <div class="hero-content">
+            <h1 class="hero-title">Stranger Things</h1>
+            <p class="hero-description">Cuando un niño desaparece, un pequeño pueblo descubre un misterio que involucra experimentos secretos, fuerzas sobrenaturales aterradoras y una niña muy extraña.</p>
+            <div class="hero-buttons">
+                <button class="play-btn">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" style="margin-right: 10px;">
+                        <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                    </svg>
+                    Reproducir
+                </button>
+                <button class="more-info-btn">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" style="margin-right: 10px;">
+                        <circle cx="12" cy="12" r="10" stroke-width="2"></circle>
+                        <line x1="12" y1="16" x2="12" y2="12" stroke-width="2"></line>
+                        <line x1="12" y1="8" x2="12" y2="8" stroke-width="2"></line>
+                    </svg>
+                    Más información
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Popular on Netflix -->
+    <div class="slider-section">
+        <h2 class="slider-title">Populares en Netflix</h2>
+        <div class="slider">
+            <div class="slider-item">
+                <img src="img/popular/squid-game.jpg" alt="El Juego del Calamar">
+                <div class="title-overlay">El Juego del Calamar</div>
+            </div>
+            <div class="slider-item">
+                <img src="img/popular/money-heist.jpg" alt="La Casa de Papel">
+                <div class="title-overlay">La Casa de Papel</div>
+            </div>
+            <div class="slider-item">
+                <img src="img/popular/dark.jpg" alt="Dark">
+                <div class="title-overlay">Dark</div>
+            </div>
+            <div class="slider-item">
+                <img src="img/popular/witcher.jpg" alt="The Witcher">
+                <div class="title-overlay">The Witcher</div>
+            </div>
+            <div class="slider-item">
+                <img src="img/popular/queens-gambit.jpg" alt="Gambito de Dama">
+                <div class="title-overlay">Gambito de Dama</div>
+            </div>
+            <div class="slider-item">
+                <img src="img/popular/lupin.jpg" alt="Lupin">
+                <div class="title-overlay">Lupin</div>
+            </div>
+            <div class="slider-item">
+                <img src="img/popular/crown.jpg" alt="The Crown">
+                <div class="title-overlay">The Crown</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Trending Now -->
+    <div class="slider-section">
+        <h2 class="slider-title">Tendencias actuales</h2>
+        <div class="slider">
+            <div class="slider-item">
+                <img src="img/trending/bridgerton.jpg" alt="Bridgerton">
+                <div class="title-overlay">Bridgerton</div>
+            </div>
+            <div class="slider-item">
+                <img src="img/trending/dont-look-up.jpg" alt="No mires arriba">
+                <div class="title-overlay">No mires arriba</div>
+            </div>
+            <div class="slider-item">
+                <img src="img/trending/extraction.jpg" alt="Tyler Rake">
+                <div class="title-overlay">Tyler Rake</div>
+            </div>
+            <div class="slider-item">
+                <img src="img/trending/red-notice.jpg" alt="Alerta Roja">
+                <div class="title-overlay">Alerta Roja</div>
+            </div>
+            <div class="slider-item">
+                <img src="img/trending/outside-the-wire.jpg" alt="Zona de riesgo">
+                <div class="title-overlay">Zona de riesgo</div>
+            </div>
+            <div class="slider-item">
+                <img src="img/trending/circle.jpg" alt="El círculo">
+                <div class="title-overlay">El círculo</div>
+            </div>
+            <div class="slider-item">
+                <img src="img/trending/sweet-tooth.jpg" alt="Sweet Tooth">
+                <div class="title-overlay">Sweet Tooth</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Watch Again -->
+    <div class="slider-section">
+        <h2 class="slider-title">Ver de nuevo</h2>
+        <div class="slider">
+            <div class="slider-item">
+                <img src="img/watch-again/black-mirror.jpg" alt="Black Mirror">
+                <div class="title-overlay">Black Mirror</div>
+            </div>
+            <div class="slider-item">
+                <img src="img/watch-again/narcos.jpg" alt="Narcos">
+                <div class="title-overlay">Narcos</div>
+            </div>
+            <div class="slider-item">
+                <img src="img/watch-again/ozark.jpg" alt="Ozark">
+                <div class="title-overlay">Ozark</div>
+            </div>
+            <div class="slider-item">
+                <img src="img/watch-again/peaky-blinders.jpg" alt="Peaky Blinders">
+                <div class="title-overlay">Peaky Blinders</div>
+            </div>
+            <div class="slider-item">
+                <img src="img/watch-again/bojack-horseman.jpg" alt="BoJack Horseman">
+                <div class="title-overlay">BoJack Horseman</div>
+            </div>
+            <div class="slider-item">
+                <img src="img/watch-again/mindhunter.jpg" alt="Mindhunter">
+                <div class="title-overlay">Mindhunter</div>
+            </div>
+            <div class="slider-item">
+                <img src="img/watch-again/breaking-bad.jpg" alt="Breaking Bad">
+                <div class="title-overlay">Breaking Bad</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-links">
+            <a href="#">Preguntas frecuentes</a>
+            <a href="#">Centro de ayuda</a>
+            <a href="#">Cuenta</a>
+            <a href="#">Prensa</a>
+            <a href="#">Relaciones con inversionistas</a>
+            <a href="#">Empleo</a>
+            <a href="#">Canjear tarjetas de regalo</a>
+            <a href="#">Comprar tarjetas de regalo</a>
+            <a href="#">Formas de ver</a>
+            <a href="#">Términos de uso</a>
+            <a href="#">Privacidad</a>
+            <a href="#">Preferencias de cookies</a>
+            <a href="#">Información corporativa</a>
+            <a href="#">Contáctanos</a>
+            <a href="#">Avisos legales</a>
+        </div>
+        <p class="footer-text">© 1997-2025 Netflix, Inc.</p>
+    </footer>
+
+    <script>
+        // Cambiar el fondo del navbar al hacer scroll
+        window.addEventListener('scroll', function() {
+            const navbar = document.querySelector('.navbar');
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+
+        // Añadir efecto de hover a los ítems del slider
+        document.querySelectorAll('.slider-item').forEach(item => {
+            item.addEventListener('mouseenter', function() {
+                setTimeout(() => {
+                    this.style.transform = 'scale(1.05)';
+                    this.style.zIndex = '10';
+                }, 300);
+            });
+            
+            item.addEventListener('mouseleave', function() {
+                this.style.transform = 'scale(1)';
+                this.style.zIndex = '1';
+            });
+        });
+
+        // Funcionalidad para los botones
+        document.querySelector('.play-btn').addEventListener('click', function() {
+            alert('Reproduciendo Stranger Things');
+        });
+        
+        document.querySelector('.more-info-btn').addEventListener('click', function() {
+            alert('Mostrando más información sobre Stranger Things');
+        });
+
+        // Funcionalidad para mostrar información de películas
+        document.querySelectorAll('.slider-item').forEach(item => {
+            item.addEventListener('click', function() {
+                const title = this.querySelector('.title-overlay').textContent;
+                alert(`Has seleccionado: ${title}`);
+            });
+        });
+    </script>
+</body>
+</html>
